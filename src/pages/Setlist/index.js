@@ -80,13 +80,24 @@ export default function Setlist() {
     const [offset, setOffset] = useState(0);
     const scrollViewRef = useRef();
 
-    const scrollDown = () => {
-        let offset = 0;
-        setInterval(() => {
-            offset += 2
-            scrollViewRef.current?.scrollTo({ x: 0, y: offset, animated: true })
-        }, 1000)
-    }
+    const [isScrolling, setIsScrolling] = useState(false);
+    const [intervalId, setIntervalId] = useState(null);
+
+    const startAutoScroll = () => {
+        if (!isScrolling) {
+            setIsScrolling(true);
+            let offset = 0;
+            const id = setInterval(() => {
+                offset += 3
+                scrollViewRef.current?.scrollTo({ x: 0, y: offset, animated: true })
+            }, 500) // Adjust the interval time as needed
+            setIntervalId(id);
+        } else if (isScrolling) {
+            clearInterval(intervalId);
+            setIsScrolling(false);
+            setIntervalId(null);
+        }
+    };
 
     //code used to searchBar
     const [searchQuery, setSearchQuery] = useState("");
@@ -224,6 +235,7 @@ export default function Setlist() {
     }
 
     useEffect(() => {
+
         if (!tabEspecial || tabEspecial.length < 1) {
             setValidTabEspecial('#ff7401')
         } else {
@@ -637,7 +649,12 @@ export default function Setlist() {
         }
     }
 
-
+    async function closeModalShow() {
+        SoundPlayer.stop();
+        setPlay(play => !play);
+        setPlayStop('Play');
+        setModalShowVisible(!modalShowVisible)
+    }
 
     return (
 
@@ -731,7 +748,7 @@ export default function Setlist() {
                                             />
                                         }
                                         showsVerticalScrollIndicator={false}
-
+                                        keyExtractor={(item) => item.id.toString()}
                                         renderItem={({ item, index }) => (
                                             <View>
                                                 <View style={{ paddingVertical: 5 }}>
@@ -740,9 +757,11 @@ export default function Setlist() {
                                                             <View>
                                                                 <TouchableOpacity
                                                                     onPress={() => fecharModalShow({ tab: item, tipo_view: 'info_tab' })}>
-                                                                    <Text numberOfLines={1} style={{ color: 'black', fontFamily: 'EncodeSans-Light', fontSize: 16 }}>{item.nome_musica}</Text>
-                                                                    <Text numberOfLines={1} style={{ color: 'grey', fontFamily: 'EncodeSans-Light', fontSize: 14 }}>Versão {item.versao} {item.special_tab == "Sim" ? (<Text>Capo {item.capotraste}</Text>) : null}
-                                                                        {item.multitrack ? (<Image source={require('../../assets/multitrack.png')} style={{ width: 13, height: 13 }} />) : null}</Text>
+                                                                    <Text numberOfLines={1} style={{ color: 'black', fontFamily: 'EncodeSans-Light', fontSize: 16 }}>{item.nome_musica}
+                                                                        {item.multitrack ? (<View style={{ paddingLeft: 3 }}><Image source={require('../../assets/multitrack.png')} style={{ width: 13, height: 13 }} /></View>) : null}
+                                                                        {!item.multitrack && item.url_pad ? (<View style={{ paddingLeft: 3 }}><Image source={require('../../assets/pad.png')} style={{ width: 13, height: 13 }} /></View>) : null}
+                                                                    </Text>
+                                                                    <Text numberOfLines={1} style={{ color: 'grey', fontFamily: 'EncodeSans-Light', fontSize: 14 }}>Versão {item.versao} {item.special_tab == "Sim" ? (<Text>Capo {item.capotraste}</Text>) : null}</Text>
                                                                 </TouchableOpacity>
                                                             </View>
                                                         </View>
@@ -851,10 +870,6 @@ export default function Setlist() {
                             <Text style={styles.textMenu}>{dadosTab.nome_musica} ( Tom: {dadosTab.tom} )</Text>
                         </View>
 
-
-
-
-
                         <View style={{ paddingVertical: 10 }}>
                             <View style={styles.labelContainerSlider}>
                                 <Text style={{ color: 'grey', fontFamily: 'EncodeSans-Light' }}>Ajuste tamanho da fonte:</Text>
@@ -863,7 +878,7 @@ export default function Setlist() {
 
 
                                 <View style={{ padding: 10, flexDirection: 'row' }}>
-                                    <View style={{  left: 0 }}>
+                                    <View style={{ left: 0 }}>
                                         {dadosTab.multitrack ? <View>
                                             <TouchableOpacity
                                                 onPress={() => { playAudio(dadosTab.multitrack) }}
@@ -883,8 +898,9 @@ export default function Setlist() {
                                             </TouchableOpacity></View> : null}
                                     </View>
                                     <View style={{ left: 10 }}>
+
                                         <TouchableOpacity
-                                            onPress={() => scrollDown()}
+                                            onPress={() => startAutoScroll()}
                                             style={{
                                                 borderRadius: 5,
                                                 borderWidth: 1,
@@ -947,7 +963,7 @@ export default function Setlist() {
 
                     <View style={{ flexDirection: "row" }}>
                         <TouchableOpacity
-                            onPress={() => setModalShowVisible(!modalShowVisible)}
+                            onPress={() => closeModalShow()}
                             style={styles.buttonClose}
                             keyboardType='numeric'
                             maxLength={10}>

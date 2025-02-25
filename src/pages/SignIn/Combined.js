@@ -6,7 +6,7 @@ const CombinedAnimation = () => {
 
   useEffect(() => {
     // Rotate animation
-       Animated.loop(
+
          Animated.sequence([
             Animated.timing(rotateValue, {
             toValue: 1,
@@ -20,11 +20,11 @@ const CombinedAnimation = () => {
             useNativeDriver: true,
             easing: Easing.linear
           }),
-         ])
-        ).start();
+         ]).start();
+
 
     // Pulse animation
-    Animated.loop(
+
       Animated.sequence([
         Animated.timing(pulseValue, {
           toValue: 1.5,
@@ -36,9 +36,9 @@ const CombinedAnimation = () => {
           duration: 2000,
           useNativeDriver: true,
         }),
-      ])
-    ).start();
-  }, [rotateValue, pulseValue]);
+      ]).start();
+
+  }, []);
 
   const combinedStyle = {
     transform: [

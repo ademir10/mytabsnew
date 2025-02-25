@@ -489,7 +489,7 @@ export default function Usuarios() {
                                                     />
                                                 }
                                                 showsVerticalScrollIndicator={false}
-
+                                                keyExtractor={(item) => item.id.toString()}
                                                 renderItem={({ item, index }) => (
                                                     <View>
                                                         <View style={{ paddingVertical: 5 }}>

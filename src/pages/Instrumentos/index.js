@@ -323,7 +323,7 @@ export default function Instrumentos() {
                                             />
                                         }
                                         showsVerticalScrollIndicator={false}
-
+                                        keyExtractor={(item) => item.id.toString()}
                                         renderItem={({ item, index }) => (
                                             <View>
                                                 <View style={{ paddingVertical: 5 }}>
