@@ -212,7 +212,7 @@ export default function Config() {
                 animatedStyle,
             ]}>
             <Image
-                source={require("../../assets/top2.png")}
+                source={require("../../assets/top.png")}
                 style={styles.topImage}
             />
 
@@ -296,7 +296,7 @@ export default function Config() {
 
             <View style={styles.leftImageContainer}>
                 <Image
-                    source={require("../../assets/footer.png")}
+                    source={require("../../assets/footer2.png")}
                     style={styles.leftImage}
                 />
             </View>

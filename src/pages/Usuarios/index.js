@@ -421,7 +421,7 @@ export default function Usuarios() {
 
             <View style={styles.topImageContainer}>
                 <Image
-                    source={require("../../assets/top2.png")}
+                    source={require("../../assets/top.png")}
                     style={styles.topImage}
                 />
 

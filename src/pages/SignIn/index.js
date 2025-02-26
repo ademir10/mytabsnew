@@ -230,7 +230,7 @@ export default function SignIn() {
 
             <View style={styles.topImageContainer}>
                 <Image
-                    source={require("../../assets/top2.png")}
+                    source={require("../../assets/top.png")}
                     style={styles.topImage}
                 />
             </View>
@@ -310,7 +310,7 @@ export default function SignIn() {
 
             <View style={styles.leftImageContainer}>
                 <Image
-                    source={require("../../assets/footer.png")}
+                    source={require("../../assets/footer2.png")}
                     style={styles.leftImage}
                 />
             </View>
