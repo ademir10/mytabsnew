@@ -20,7 +20,7 @@ var url = config.address_api + '/pages/login_app';
             });
 
 PARA GERAR PROJETO COM VERSÃO ANTERIOR REACT NATIVE:
-npx react-native@0.75.5 init mytabs --version="0.75.5"
+npx @react-native-community/cli init mytabs --version="0.75.5"
 
 
 PARA CONFIGURAR O ANDROID SEM O METRO E RODAR NO CELULAR:
