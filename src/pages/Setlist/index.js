@@ -205,7 +205,7 @@ export default function Setlist() {
             setVersao(dados.tablatura.versao);
             setLinkYoutube(dados.tablatura.link_youtube);
             setLetra(dados.tablatura.letra);
-            setTipoView('Editar');
+            setTipoView('Editar setlist');
         } else {
             setTabEspecial('');
             setNomeMusica('');
