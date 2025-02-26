@@ -629,13 +629,18 @@ export default function Setlist() {
     const [play, setPlay] = useState(false);
     const [playStop, setPlayStop] = useState('Play')
 
-    async function playAudio(multitrackName) {
+    async function playAudio(data) {
 
         try {
+            var dadosApi = await AsyncStorage.getItem('@storageMytabs:dados_api');
+            var dados_api = JSON.parse(dadosApi);
+            if (data.type_audio == 'multitrack') {
+                var url_multitrack = 'http://' + dados_api.address + ':' + dados_api.port + '/images/uploads/multitracks/' + data.url_audio;
+            } else if (data.type_audio == 'pad') {
+                var url_multitrack = data.url_audio;
+            }
+
             if (!play) {
-                var dadosApi = await AsyncStorage.getItem('@storageMytabs:dados_api');
-                data = JSON.parse(dadosApi);
-                var url_multitrack = 'http://' + data.address + ':' + data.port + '/images/uploads/multitracks/' + multitrackName;
                 SoundPlayer.playUrl(url_multitrack);
                 setPlay(play => !play);
                 setPlayStop('Stop');
@@ -651,8 +656,14 @@ export default function Setlist() {
 
     async function closeModalShow() {
         SoundPlayer.stop();
-        setPlay(play => !play);
+        setPlay(false);
         setPlayStop('Play');
+
+        if (intervalId) {
+            clearInterval(intervalId);
+            setIsScrolling(false);
+            setIntervalId(null);
+        }
         setModalShowVisible(!modalShowVisible)
     }
 
@@ -881,7 +892,7 @@ export default function Setlist() {
                                     <View style={{ left: 0 }}>
                                         {dadosTab.multitrack ? <View>
                                             <TouchableOpacity
-                                                onPress={() => { playAudio(dadosTab.multitrack) }}
+                                                onPress={() => { playAudio({ type_audio: 'multitrack', url_audio: dadosTab.multitrack }) }}
                                                 style={{
                                                     borderRadius: 5,
                                                     borderWidth: 1,
@@ -896,6 +907,25 @@ export default function Setlist() {
                                                     <Image source={require('../../assets/buttons/btn-stop.png')} style={{ width: 25, height: 25, resizeMode: 'contain' }} />
                                                 }
                                             </TouchableOpacity></View> : null}
+
+                                        {!dadosTab.multitrack && dadosTab.url_pad ? <View>
+                                            <TouchableOpacity
+                                                onPress={() => { playAudio({ type_audio: 'pad', url_audio: dadosTab.url_pad }) }}
+                                                style={{
+                                                    borderRadius: 5,
+                                                    borderWidth: 1,
+                                                    borderColor: "grey",
+                                                    backgroundColor: '#fe9701',
+                                                    width: 30
+                                                }}>
+
+                                                {playStop == 'Play' ?
+                                                    <Image source={require('../../assets/buttons/btn-play.png')} style={{ width: 25, height: 25, resizeMode: 'contain' }} />
+                                                    :
+                                                    <Image source={require('../../assets/buttons/btn-stop.png')} style={{ width: 25, height: 25, resizeMode: 'contain' }} />
+                                                }
+                                            </TouchableOpacity></View> : null}
+
                                     </View>
                                     <View style={{ left: 10 }}>
 
