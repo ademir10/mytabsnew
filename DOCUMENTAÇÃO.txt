@@ -21,3 +21,11 @@ var url = config.address_api + '/pages/login_app';
 
 PARA GERAR PROJETO COM VERSÃO ANTERIOR REACT NATIVE:
 npx react-native@0.75.5 init mytabs --version="0.75.5"
+
+
+PARA CONFIGURAR O ANDROID SEM O METRO E RODAR NO CELULAR:
+Criar um arquivo chamado( index.android.bundle ) dentro da pasta:
+android/app/src/main/assets/
+
+rodar o comando abaixo na raiz do projeto:
+npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res

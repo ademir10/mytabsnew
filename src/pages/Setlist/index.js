@@ -57,6 +57,7 @@ export default function Setlist() {
         nome: 'Não',
         value: 'Não'
     }]);
+    const [editSetList, setEditSetList] = useState();
     const [tabEspecial, setTabEspecial] = useState();
     const [validTabEspecial, setValidTabEspecial] = useState('grey');
     const [versao, setVersao] = useState();
@@ -191,7 +192,8 @@ export default function Setlist() {
 
     function fecharModal(dados) {
 
-        if (dados) {
+        if (dados && dados.editar_setlist == 'sim') {
+            setEditSetList('sim');
             setIdSelected(dados.tablatura.id);
             setTabEspecial(dados.tablatura.special_tab);
             setNomeMusica(dados.tablatura.nome_musica);
@@ -205,8 +207,9 @@ export default function Setlist() {
             setVersao(dados.tablatura.versao);
             setLinkYoutube(dados.tablatura.link_youtube);
             setLetra(dados.tablatura.letra);
-            setTipoView('Editar setlist');
+            setTipoView('Editar');   
         } else {
+            setEditSetList('não');
             setTabEspecial('');
             setNomeMusica('');
             setTomOriginal('');
@@ -219,8 +222,9 @@ export default function Setlist() {
             setVersao('');
             setLinkYoutube('');
             setLetra('');
-            setTipoView('Novo');
+            setTipoView('Novo'); 
         }
+        
         setModalVisible(!modalVisible);
 
     }
@@ -424,7 +428,7 @@ export default function Setlist() {
                         const fetchData = async () => {
                             var infoData = await AsyncStorage.getItem('@storageMytabs:dados_session');
                             var dadosSessao = JSON.parse(infoData);
-
+                            
                             if (data.tipo_view == 'Excluir') {
                                 var dados = JSON.stringify({
                                     id: data.id,
@@ -436,7 +440,9 @@ export default function Setlist() {
                                 var dados = JSON.stringify({
                                     id: idSelected,
                                     usuario_logado: dadosSessao.usuario,
+                                    dados_sessao: dadosSessao.user_settings,
                                     tipo_view: tipoView,
+                                    editar_setlist: editSetList,
                                     versao: versao,
                                     nome_musica: nomeMusica,
                                     tom: tom,
@@ -470,7 +476,7 @@ export default function Setlist() {
                                 .then((response) => response.json())
                                 .then(
                                     (retorno_API) => {
-
+                                        setEditSetList('não');
                                         setIsLoading(false);
                                         setResponse(retorno_API);
                                         if (retorno_API.erro == 'sim') {
@@ -791,7 +797,7 @@ export default function Setlist() {
 
                                                             <View style={{ position: 'absolute', right: 38, paddingTop: 4 }}>
                                                                 <TouchableOpacity
-                                                                    onPress={() => fecharModal({ tablatura: item })}
+                                                                    onPress={() => fecharModal({ editar_setlist: 'sim', tablatura: item })}
                                                                     style={{
                                                                         borderRadius: 5,
                                                                         borderWidth: 1,
@@ -1027,7 +1033,7 @@ export default function Setlist() {
 
 
                             <View style={{ flexDirection: 'row', padding: 10, alignSelf: 'center' }}>
-                                <Text style={styles.textMenu}>{tipoView} Tablatura</Text>
+                                <Text style={styles.textMenu}>{tipoView} Tablatura {'ATE AQUI 2 ' + editSetList}</Text>
                             </View>
 
                             <Text style={{ fontFamily: 'EncodeSans-Light', paddingBottom: 10 }}>
